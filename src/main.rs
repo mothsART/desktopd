@@ -49,17 +49,22 @@ mod tests {
         let options = CopyOptions::new();
         let tmp_dir = tempdir().unwrap();
         copy("tests/test1", &tmp_dir, &options).unwrap();
-  
+
         let env = fake_xdg_data_env(
             &tmp_dir,
             vec!["path-1", "path-2", "path-3", "path-4", "path-5", "path-4"]
         );
+        let dirs = get_dirs(&env);
+        let mut result: Vec<String> = vec![];
+        for d in dirs {
+            result.push(d[15..].to_string());
+        }
         assert_eq!(
-            get_dirs(&env), 
+            result,
             vec![
-                "/tmp/.tmpquBvu7/test1/path-1/applications",
-                "/tmp/.tmpquBvu7/test1/path-2/applications",
-                "/tmp/.tmpquBvu7/test1/path-4/applications"
+                "/test1/path-1/applications",
+                "/test1/path-2/applications",
+                "/test1/path-4/applications",
             ]
         );
         tmp_dir.close().unwrap();
