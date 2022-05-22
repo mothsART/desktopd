@@ -1,7 +1,7 @@
 #[cfg(target_os = "linux")]
 #[cfg(test)]
 mod tests {
-    use desktopd::collect::{get_dirs, collect_desktops_path};
+    use desktopd::collect::{collect_desktops_path, get_dirs};
     use fs_extra::dir::{copy, CopyOptions};
     use tempfile::{tempdir, TempDir};
 

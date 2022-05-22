@@ -2,7 +2,7 @@ use std::env;
 
 mod collect;
 
-use crate::collect::{get_dirs, collect_desktops_path};
+use crate::collect::{collect_desktops_path, get_dirs};
 
 fn main() {
     let xdg_data_dirs = env::var("XDG_DATA_DIRS");

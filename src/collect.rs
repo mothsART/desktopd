@@ -1,7 +1,7 @@
 use std::path::Path;
 
-use itertools::Itertools;
 use glob::glob;
+use itertools::Itertools;
 
 pub fn get_dirs(xdg_data_dirs: &str) -> Vec<String> {
     xdg_data_dirs
