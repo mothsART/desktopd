@@ -1,9 +1,10 @@
 #[cfg(target_os = "linux")]
 #[cfg(test)]
 mod tests {
-    use desktopd::collect::{collect_desktops_path, get_dirs};
     use fs_extra::dir::{copy, CopyOptions};
     use tempfile::{tempdir, TempDir};
+
+    use desktopd::collect::{collect_desktops_path, get_dirs};
 
     fn fake_xdg_data_env(tmp_dir: &TempDir, dirs: Vec<&str>) -> String {
         let mut result = String::new();
