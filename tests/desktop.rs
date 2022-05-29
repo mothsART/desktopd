@@ -10,7 +10,7 @@ mod tests {
     fn test_desktop() {
         assert_eq!(
             DesktopFile {
-                default_name: Some("Chromium Web Browser".to_string()),
+                default_name: "Chromium Web Browser".to_string(),
                 default_generic_name: Some("Web Browser".to_string()),
                 default_comment: Some("Access the Internet".to_string()),
 
@@ -42,6 +42,10 @@ mod tests {
                     "fr".to_string(),
                     vec!("navigateur".to_string(), "surfer".to_string())
                 ),]),
+
+                exec: None,
+                try_exec: None,
+                icon: None,
             },
             DesktopFile::new(Path::new("tests/test1/path-1/applications/app-one.desktop"))
         );

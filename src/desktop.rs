@@ -5,7 +5,7 @@ use ini::Ini;
 
 #[derive(Debug, PartialEq)]
 pub struct DesktopFile {
-    pub default_name: Option<String>,
+    pub default_name: String,
     pub default_generic_name: Option<String>,
     pub default_comment: Option<String>,
 
@@ -18,6 +18,10 @@ pub struct DesktopFile {
     pub i18n_comments: HashMap<String, String>,
 
     pub i18n_keywords: HashMap<String, Vec<String>>,
+
+    pub exec: Option<String>,
+    pub try_exec: Option<String>,
+    pub icon: Option<String>,
 }
 
 fn populate_i18n(
@@ -80,7 +84,7 @@ impl DesktopFile {
         }
         let section = Some("Desktop Entry");
         DesktopFile {
-            default_name: destktop_ini.get_from(section, "Name").map(str::to_string),
+            default_name: destktop_ini.get_from(section, "Name").map(str::to_string).unwrap(),
             default_generic_name: destktop_ini
                 .get_from(section, "GenericName")
                 .map(str::to_string),
@@ -110,6 +114,10 @@ impl DesktopFile {
             i18n_generic_names,
             i18n_comments,
             i18n_keywords,
+
+            exec: destktop_ini.get_from(section, "Exec").map(str::to_string),
+            try_exec: destktop_ini.get_from(section, "TryExec").map(str::to_string),
+            icon: destktop_ini.get_from(section, "Icon").map(str::to_string),
         }
     }
 }
