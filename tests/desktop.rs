@@ -13,6 +13,7 @@ mod tests {
                 default_name: "Chromium Web Browser".to_string(),
                 default_generic_name: Some("Web Browser".to_string()),
                 default_comment: Some("Access the Internet".to_string()),
+                path: "tests/test1/path-1/applications/app-one.desktop".to_string(),
 
                 default_keywords: vec!(
                     "browser".to_string(),

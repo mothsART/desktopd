@@ -12,3 +12,5 @@ fs_extra = "1.2"
 glob = "0.3"
 rust-ini = "0.18"
 inotify = "0.10"
+diesel = { version = "1.4", features = ["sqlite"] }
+dotenv = "0.15"

@@ -5,6 +5,7 @@ use ini::Ini;
 
 #[derive(Debug, PartialEq)]
 pub struct DesktopFile {
+    pub path: String,
     pub default_name: String,
     pub default_generic_name: Option<String>,
     pub default_comment: Option<String>,
@@ -84,6 +85,7 @@ impl DesktopFile {
         }
         let section = Some("Desktop Entry");
         DesktopFile {
+            path: path.to_str().unwrap().to_string(),
             default_name: destktop_ini.get_from(section, "Name").map(str::to_string).unwrap(),
             default_generic_name: destktop_ini
                 .get_from(section, "GenericName")
