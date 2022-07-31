@@ -4,6 +4,7 @@ table! {
         title -> Text,
         path -> Text,
         generic_title -> Nullable<Text>,
+        comment -> Nullable<Text>,
         exec -> Nullable<Text>,
         try_exec -> Nullable<Text>,
         icon_path -> Nullable<Text>,
@@ -15,7 +16,7 @@ table! {
         id -> Nullable<Integer>,
         app_id -> Nullable<Integer>,
         title -> Text,
-        lang -> Nullable<Text>,
+        lang -> Text,
     }
 }
 
@@ -24,7 +25,7 @@ table! {
         id -> Nullable<Integer>,
         app_id -> Nullable<Integer>,
         title -> Text,
-        lang -> Nullable<Text>,
+        lang -> Text,
     }
 }
 

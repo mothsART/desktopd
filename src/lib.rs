@@ -50,18 +50,63 @@ impl DesktopDDb {
                     .values(&default_app)
                     .execute(&self.connection)?;
 
-                for r in d.i18n_names {
+                for n in d.i18n_names {
                     let lang_app = NewNames {
-                        title: &r.1,
+                        title: &n.1,
                         app_id: app_id as i32,
-                        lang: &r.0,
+                        lang: &n.0,
                     };
 
                     diesel::insert_into(names::table)
                     .values(&lang_app)
                     .execute(&self.connection)?;
                 }
-                break;
+
+                for g in d.i18n_generic_names {
+                    let generic_name = NewGenericNames {
+                        title: &g.1,
+                        app_id: app_id as i32,
+                        lang: &g.0,
+                    };
+                    diesel::insert_into(generic_names::table)
+                        .values(&generic_name)
+                        .execute(&self.connection)?;
+                }
+
+                for c in d.i18n_comments {
+                    let comment = NewComments {
+                        title: &c.1,
+                        app_id: app_id as i32,
+                        lang: &c.0,
+                    };
+                    diesel::insert_into(comments::table)
+                        .values(&comment)
+                        .execute(&self.connection)?;
+                }
+
+                for k in d.default_keywords {
+                    let keyword = NewKeywords {
+                        key: &k,
+                        app_id: app_id as i32,
+                        lang: None,
+                    };
+                    diesel::insert_into(keywords::table)
+                        .values(&keyword)
+                        .execute(&self.connection)?;
+                }
+
+                for k_lang in d.i18n_keywords {
+                    for k in k_lang.1 {
+                        let keyword = NewKeywords {
+                            key: &k,
+                            app_id: app_id as i32,
+                            lang: Some(&k_lang.0),
+                        };
+                        diesel::insert_into(keywords::table)
+                            .values(&keyword)
+                            .execute(&self.connection)?;
+                    }
+                }
             }
             Ok(())
         });

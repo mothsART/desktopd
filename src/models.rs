@@ -24,7 +24,7 @@ pub struct NewNames<'a> {
 pub struct NewGenericNames<'a> {
     pub title: &'a str,
     pub app_id: i32,
-    pub lang: Option<&'a str>,
+    pub lang: &'a str,
 }
 
 #[derive(Insertable)]
@@ -32,7 +32,7 @@ pub struct NewGenericNames<'a> {
 pub struct NewComments<'a> {
     pub title: &'a str,
     pub app_id: i32,
-    pub lang: Option<&'a str>,
+    pub lang: &'a str,
 }
 
 #[derive(Insertable)]
