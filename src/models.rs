@@ -10,4 +10,5 @@ pub struct NewApp<'a> {
     pub exec: Option<&'a str>,
     pub try_exec: Option<&'a str>,
     pub icon_path: Option<&'a str>,
+    pub lang: Option<&'a str>,
 }
