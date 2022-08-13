@@ -1,6 +1,6 @@
 CREATE TABLE comments (
-    id INTEGER PRIMARY KEY,
-    app_id INTEGER,
+    id INTEGER PRIMARY KEY NOT NULL,
+    app_id INTEGER NOT NULL,
     title VARCHAR NOT NULL,
     lang VARCHAR NOT NULL,
 

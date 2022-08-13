@@ -1,6 +1,6 @@
 table! {
     app (id) {
-        id -> Nullable<Integer>,
+        id -> Integer,
         title -> Text,
         path -> Text,
         generic_title -> Nullable<Text>,
@@ -13,17 +13,8 @@ table! {
 
 table! {
     comments (id) {
-        id -> Nullable<Integer>,
-        app_id -> Nullable<Integer>,
-        title -> Text,
-        lang -> Text,
-    }
-}
-
-table! {
-    generic_names (id) {
-        id -> Nullable<Integer>,
-        app_id -> Nullable<Integer>,
+        id -> Integer,
+        app_id -> Integer,
         title -> Text,
         lang -> Text,
     }
@@ -31,26 +22,15 @@ table! {
 
 table! {
     keywords (id) {
-        id -> Nullable<Integer>,
-        app_id -> Nullable<Integer>,
+        id -> Integer,
+        app_id -> Integer,
         key -> Text,
         lang -> Nullable<Text>,
-    }
-}
-
-table! {
-    names (id) {
-        id -> Nullable<Integer>,
-        app_id -> Nullable<Integer>,
-        title -> Text,
-        lang -> Text,
     }
 }
 
 allow_tables_to_appear_in_same_query!(
     app,
     comments,
-    generic_names,
     keywords,
-    names,
 );

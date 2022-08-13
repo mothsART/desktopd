@@ -1,6 +1,6 @@
 CREATE TABLE keywords (
-    id INTEGER PRIMARY KEY,
-    app_id INTEGER,
+    id INTEGER PRIMARY KEY NOT NULL,
+    app_id INTEGER NOT NULL,
     key VARCHAR NOT NULL,
     lang VARCHAR NULL,
 

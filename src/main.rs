@@ -12,7 +12,9 @@ mod models;
 mod schema;
 
 use desktopd::desktop::DesktopFile;
-use desktopd::DesktopDDb;
+use desktopd::db::basic::{DesktopDDb, Db};
+use desktopd::db::populate::PopulateDb;
+use desktopd::db::search::SearchDb;
 
 use crate::collect::{collect_desktops_path, get_dirs};
 use crate::watch::watch;

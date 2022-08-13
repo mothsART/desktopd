@@ -1,5 +1,5 @@
 CREATE TABLE app (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY NOT NULL,
     title VARCHAR NOT NULL,
     path VARCHAR NOT NULL,
     generic_title VARCHAR NULL,
