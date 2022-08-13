@@ -1,17 +1,11 @@
 use std::env;
 
-use inotify::{
-    EventMask,
-    WatchMask,
-    Inotify,
-};
+use inotify::{EventMask, Inotify, WatchMask};
 
 pub fn watch() {
-    let mut inotify = Inotify::init()
-        .expect("Failed to initialize inotify");
+    let mut inotify = Inotify::init().expect("Failed to initialize inotify");
 
-    let current_dir = env::current_dir()
-        .expect("Failed to determine current directory");
+    let current_dir = env::current_dir().expect("Failed to determine current directory");
 
     inotify
         .add_watch(
@@ -42,8 +36,7 @@ pub fn watch() {
             .expect("Failed to read inotify events");
 
         for event in events {
-            if event.mask.contains(EventMask::CREATE)
-            && !event.mask.contains(EventMask::ISDIR) {
+            if event.mask.contains(EventMask::CREATE) && !event.mask.contains(EventMask::ISDIR) {
                 println!("File created: {:?} => {:?}", event.wd, event.name);
             } else if event.mask.contains(EventMask::DELETE) {
                 if event.mask.contains(EventMask::ISDIR) {

@@ -29,7 +29,7 @@ pub struct Comments {
 }
 
 #[derive(Insertable)]
-#[table_name="app"]
+#[table_name = "app"]
 pub struct NewApp<'a> {
     pub title: &'a str,
     pub path: &'a str,
@@ -40,7 +40,7 @@ pub struct NewApp<'a> {
 }
 
 #[derive(Insertable)]
-#[table_name="comments"]
+#[table_name = "comments"]
 pub struct NewComments<'a> {
     pub title: &'a str,
     pub app_id: i32,
@@ -48,7 +48,7 @@ pub struct NewComments<'a> {
 }
 
 #[derive(Insertable)]
-#[table_name="keywords"]
+#[table_name = "keywords"]
 pub struct NewKeywords<'a> {
     pub key: &'a str,
     pub app_id: i32,

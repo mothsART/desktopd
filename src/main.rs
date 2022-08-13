@@ -7,14 +7,13 @@ use std::path::Path;
 
 mod collect;
 mod desktop;
-mod watch;
 mod models;
 mod schema;
+mod watch;
 
-use desktopd::desktop::DesktopFile;
-use desktopd::db::basic::{DesktopDDb, Db};
+use desktopd::db::basic::{Db, DesktopDDb};
 use desktopd::db::populate::PopulateDb;
-use desktopd::db::search::SearchDb;
+use desktopd::desktop::DesktopFile;
 
 use crate::collect::{collect_desktops_path, get_dirs};
 use crate::watch::watch;
@@ -35,4 +34,5 @@ fn main() {
         }
         Err(e) => eprintln!("Error: {}", e),
     }
+    watch();
 }

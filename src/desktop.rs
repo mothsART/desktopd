@@ -86,7 +86,10 @@ impl DesktopFile {
         let section = Some("Desktop Entry");
         DesktopFile {
             path: path.to_str().unwrap().to_string(),
-            default_name: destktop_ini.get_from(section, "Name").map(str::to_string).unwrap(),
+            default_name: destktop_ini
+                .get_from(section, "Name")
+                .map(str::to_string)
+                .unwrap(),
             default_generic_name: destktop_ini
                 .get_from(section, "GenericName")
                 .map(str::to_string),
@@ -118,7 +121,9 @@ impl DesktopFile {
             i18n_keywords,
 
             exec: destktop_ini.get_from(section, "Exec").map(str::to_string),
-            try_exec: destktop_ini.get_from(section, "TryExec").map(str::to_string),
+            try_exec: destktop_ini
+                .get_from(section, "TryExec")
+                .map(str::to_string),
             icon: destktop_ini.get_from(section, "Icon").map(str::to_string),
         }
     }

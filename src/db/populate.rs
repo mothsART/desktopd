@@ -1,16 +1,13 @@
+use crate::diesel::{Connection, RunQueryDsl};
 use diesel::result::Error;
-use crate::diesel::{RunQueryDsl, Connection};
 
-use crate::desktop::DesktopFile;
 use crate::db::basic::DesktopDDb;
+use crate::desktop::DesktopFile;
 use crate::models::{NewApp, NewComments, NewKeywords};
 
 pub trait PopulateDb {
     fn insertion(&self, desktop_files: Vec<DesktopFile>);
 }
-
-use crate::diesel::QueryDsl;
-use crate::diesel::query_dsl::limit_dsl::LimitDsl;
 
 impl PopulateDb for DesktopDDb {
     fn insertion(&self, desktop_files: Vec<DesktopFile>) {
@@ -26,10 +23,10 @@ impl PopulateDb for DesktopDDb {
                 let default_app = NewApp {
                     title: &d.default_name,
                     path: &d.path,
-                    generic_title: d.default_generic_name.as_ref().map(String::as_str),
-                    exec: d.exec.as_ref().map(String::as_str),
-                    try_exec: d.try_exec.as_ref().map(String::as_str),
-                    icon_path: d.icon.as_ref().map(String::as_str),
+                    generic_title: d.default_generic_name.as_deref(),
+                    exec: d.exec.as_deref(),
+                    try_exec: d.try_exec.as_deref(),
+                    icon_path: d.icon.as_deref(),
                 };
 
                 diesel::insert_into(app::table)
