@@ -2,6 +2,7 @@
 name = "desktopd"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.62"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -11,8 +12,8 @@ fs_extra = "1.2"
 glob = "0.3"
 rust-ini = "0.18"
 inotify = "0.10"
-diesel = { version = "1.4", features = ["sqlite"] }
-dotenv = "0.15"
+diesel = { version = "2.0", features = ["sqlite"] }
+dotenvy = "0.15"
 
 [dev-dependencies]
 tempfile = "3.3"

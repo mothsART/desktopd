@@ -6,17 +6,17 @@ use crate::desktop::DesktopFile;
 use crate::models::{NewApp, NewComments, NewKeywords};
 
 pub trait PopulateDb {
-    fn insertion(&self, desktop_files: Vec<DesktopFile>);
+    fn insertion(&mut self, desktop_files: Vec<DesktopFile>);
 }
 
 impl PopulateDb for DesktopDDb {
-    fn insertion(&self, desktop_files: Vec<DesktopFile>) {
+    fn insertion(&mut self, desktop_files: Vec<DesktopFile>) {
         use crate::schema::{app, comments, keywords};
 
-        self.connection.transaction::<_, Error, _>(|| {
-            diesel::delete(app::table).execute(&self.connection)?;
-            diesel::delete(comments::table).execute(&self.connection)?;
-            diesel::delete(keywords::table).execute(&self.connection)?;
+        self.connection.transaction::<_, Error, _>(|connection| {
+            diesel::delete(app::table).execute(connection)?;
+            diesel::delete(comments::table).execute(connection)?;
+            diesel::delete(keywords::table).execute(connection)?;
 
             let mut app_id = 0;
             for d in desktop_files {
@@ -31,7 +31,7 @@ impl PopulateDb for DesktopDDb {
 
                 diesel::insert_into(app::table)
                     .values(&default_app)
-                    .execute(&self.connection)?;
+                    .execute(connection)?;
 
                 app_id += 1;
 
@@ -43,7 +43,7 @@ impl PopulateDb for DesktopDDb {
                     };
                     diesel::insert_into(keywords::table)
                         .values(&keyword)
-                        .execute(&self.connection)?;
+                        .execute(connection)?;
                 }
 
                 for g in d.i18n_generic_names {
@@ -54,7 +54,7 @@ impl PopulateDb for DesktopDDb {
                     };
                     diesel::insert_into(keywords::table)
                         .values(&keyword)
-                        .execute(&self.connection)?;
+                        .execute(connection)?;
                 }
 
                 for c in d.i18n_comments {
@@ -65,7 +65,7 @@ impl PopulateDb for DesktopDDb {
                     };
                     diesel::insert_into(comments::table)
                         .values(&comment)
-                        .execute(&self.connection)?;
+                        .execute(connection)?;
                 }
 
                 for k in d.default_keywords {
@@ -76,7 +76,7 @@ impl PopulateDb for DesktopDDb {
                     };
                     diesel::insert_into(keywords::table)
                         .values(&keyword)
-                        .execute(&self.connection)?;
+                        .execute(connection)?;
                 }
 
                 for k_lang in d.i18n_keywords {
@@ -88,7 +88,7 @@ impl PopulateDb for DesktopDDb {
                         };
                         diesel::insert_into(keywords::table)
                             .values(&keyword)
-                            .execute(&self.connection)?;
+                            .execute(connection)?;
                     }
                 }
             }

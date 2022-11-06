@@ -1,12 +1,7 @@
 use diesel::debug_query;
 use diesel::sqlite::Sqlite;
-use diesel::ExpressionMethods;
-use diesel::JoinOnDsl;
-use diesel::QueryDsl;
-use diesel::RunQueryDsl;
-use diesel::TextExpressionMethods;
-use diesel::BoolExpressionMethods;
-use diesel::GroupByDsl;
+
+use diesel::{ExpressionMethods, JoinOnDsl, QueryDsl, RunQueryDsl, TextExpressionMethods, BoolExpressionMethods};
 
 use crate::db::basic::DesktopDDb;
 use crate::desktop::DesktopFile;
@@ -35,7 +30,7 @@ impl SearchDb for DesktopDDb {
             lang as k_lang,
         };
 
-        // TODO : I'm not sure, "en" was the best choise
+        // TODO : I'm not sure, "en" was the best choice
         let lang = locale.get(0..2).unwrap_or("en");
 
         let query = app
@@ -54,14 +49,14 @@ impl SearchDb for DesktopDDb {
             )
             .or_filter(a_title.like(format!("{}%", text)))
             .group_by(&app_id)
-            .select((app_id, a_title))
+            //.select((app_id, a_title))
             ;
 
         let debug = debug_query::<Sqlite, _>(&query);
         println!("{}", debug.to_string());
         //let results = query.load::<(App, Option<Keywords>, Option<Comments>)>(&self.connection);
-        let results = query.load::<(i32, String)>(&self.connection);
-        println!("{:?}", results);
-        println!("{:?}", results.expect("REASON").len());
+        //let results = query.load::<(i32, String)>(&mut self.connection);
+        //println!("{:?}", results);
+        //println!("{:?}", results.expect("REASON").len());
     }
 }

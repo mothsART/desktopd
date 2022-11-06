@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate diesel;
 
+use dotenvy::dotenv;
 use std::env;
 
 use std::path::Path;
@@ -20,7 +21,7 @@ use crate::watch::watch;
 
 fn main() {
     let xdg_data_dirs = env::var("XDG_DATA_DIRS");
-    let db = DesktopDDb::new();
+    let mut db = DesktopDDb::new();
 
     match xdg_data_dirs {
         Ok(v) => {
