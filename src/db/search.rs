@@ -1,20 +1,31 @@
 use diesel::debug_query;
 use diesel::sqlite::Sqlite;
 
-use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, TextExpressionMethods, BoolExpressionMethods, NullableExpressionMethods};
+use diesel::{
+    BoolExpressionMethods, ExpressionMethods, NullableExpressionMethods, QueryDsl, RunQueryDsl,
+    TextExpressionMethods,
+};
 
 use crate::db::basic::DesktopDDb;
 use crate::models::SearchResult;
 
 pub trait SearchDb {
-    fn get(&mut self, text: &str, locale: &str) -> Result<Vec<Option<SearchResult>>, diesel::result::Error>;
+    fn get(
+        &mut self,
+        text: &str,
+        locale: &str,
+    ) -> Result<Vec<Option<SearchResult>>, diesel::result::Error>;
 }
 
 impl SearchDb for DesktopDDb {
-    fn get(&mut self, text: &str, locale: &str) -> Result<Vec<Option<SearchResult>>, diesel::result::Error> {
+    fn get(
+        &mut self,
+        text: &str,
+        locale: &str,
+    ) -> Result<Vec<Option<SearchResult>>, diesel::result::Error> {
         use crate::schema::{app, comments, keywords};
 
-       let selection = (
+        let selection = (
             app::title,
             app::path,
             app::generic_title,
@@ -22,7 +33,6 @@ impl SearchDb for DesktopDDb {
             app::exec,
             app::try_exec,
             app::icon_path,
-
             comments::title,
         );
 
@@ -34,7 +44,6 @@ impl SearchDb for DesktopDDb {
             app::exec,
             app::try_exec,
             app::icon_path,
-
             comments::title,
         );
 
@@ -45,22 +54,23 @@ impl SearchDb for DesktopDDb {
             .left_join(keywords::dsl::keywords)
             .left_join(comments::dsl::comments)
             .filter(
-                keywords::lang.like(format!("{}%", lang))
-                .and(comments::lang.like(format!("{}%", lang)))
-                .and(
-                    comments::title.like(format!("%{}%", text))
-                    .or(
-                        keywords::key.like(format!("{}%", text))
-                        .or(keywords::lang.is_null())
-                    )
-                    .or(app::title.like(format!("{}%", text)))
-                )
+                keywords::lang
+                    .like(format!("{}%", lang))
+                    .and(comments::lang.like(format!("{}%", lang)))
+                    .and(
+                        comments::title
+                            .like(format!("%{}%", text))
+                            .or(keywords::key
+                                .like(format!("{}%", text))
+                                .or(keywords::lang.is_null()))
+                            .or(app::title.like(format!("{}%", text))),
+                    ),
             )
             .select(selection.nullable())
             .group_by(selection);
 
         let debug = debug_query::<Sqlite, _>(&query);
-        println!("{}", debug.to_string());
+        println!("{}", debug);
 
         query.load::<Option<SearchResult>>(&mut self.connection)
     }

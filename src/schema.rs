@@ -32,8 +32,4 @@ table! {
 joinable!(comments -> app (app_id));
 joinable!(keywords -> app (app_id));
 
-allow_tables_to_appear_in_same_query!(
-    app,
-    comments,
-    keywords,
-);
+allow_tables_to_appear_in_same_query!(app, comments, keywords,);

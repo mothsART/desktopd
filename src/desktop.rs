@@ -3,7 +3,7 @@ use std::path::Path;
 
 use ini::Ini;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct DesktopFile {
     pub path: String,
     pub default_name: String,

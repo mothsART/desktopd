@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate diesel;
 
-use dotenvy::dotenv;
 use std::env;
 
 use std::path::Path;
@@ -35,5 +34,5 @@ fn main() {
         }
         Err(e) => eprintln!("Error: {}", e),
     }
-    //watch();
+    watch();
 }

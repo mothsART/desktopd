@@ -1,8 +1,8 @@
 use std::env;
 
 use crate::diesel::Connection;
-use dotenvy::dotenv;
 use diesel::SqliteConnection;
+use dotenvy::dotenv;
 
 pub struct DesktopDDb {
     pub connection: SqliteConnection,

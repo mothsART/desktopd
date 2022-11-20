@@ -39,4 +39,3 @@ pub struct NewKeywords<'a> {
     pub app_id: i32,
     pub lang: Option<&'a str>,
 }
-
