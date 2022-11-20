@@ -6,7 +6,6 @@ use std::env;
 use std::path::Path;
 
 mod collect;
-mod desktop;
 mod models;
 mod schema;
 mod watch;
