@@ -5,7 +5,7 @@ use inotify::{EventMask, Inotify, WatchMask};
 pub fn watch() {
     let mut inotify = Inotify::init().expect("Failed to initialize inotify");
 
-    let current_dir = env::current_dir().expect("Failed to determine current directory");
+    let _current_dir = env::current_dir().expect("Failed to determine current directory");
 
     inotify
         .add_watch(

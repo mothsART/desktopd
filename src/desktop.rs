@@ -25,23 +25,23 @@ pub struct DesktopFile {
     pub icon: Option<String>,
 }
 
-fn populate_i18n(
-    prefix: &'static str,
-    key: String,
-    value: String,
-    dic: &mut HashMap<String, String>,
-) -> bool {
-    if !key.starts_with(prefix) {
-        return false;
-    }
-    if let Some(lang) = key.strip_prefix(prefix).unwrap().strip_suffix(']') {
-        dic.insert(lang.to_string(), value);
-        return true;
-    }
-    false
-}
-
 impl DesktopFile {
+    fn populate_i18n(
+        prefix: &'static str,
+        key: String,
+        value: String,
+        dic: &mut HashMap<String, String>,
+    ) -> bool {
+        if !key.starts_with(prefix) {
+            return false;
+        }
+        if let Some(lang) = key.strip_prefix(prefix).unwrap().strip_suffix(']') {
+            dic.insert(lang.to_string(), value);
+            return true;
+        }
+        false
+    }
+
     pub fn new(path: &Path) -> DesktopFile {
         let destktop_ini = Ini::load_from_file(path).unwrap();
         let mut i18n_names = HashMap::new();
@@ -54,10 +54,10 @@ impl DesktopFile {
                 continue;
             }
             for (k, v) in prop.iter() {
-                if populate_i18n("Name[", k.to_string(), v.to_string(), &mut i18n_names) {
+                if Self::populate_i18n("Name[", k.to_string(), v.to_string(), &mut i18n_names) {
                     continue;
                 }
-                if populate_i18n(
+                if Self::populate_i18n(
                     "GenericName[",
                     k.to_string(),
                     v.to_string(),
@@ -65,7 +65,7 @@ impl DesktopFile {
                 ) {
                     continue;
                 }
-                if populate_i18n("Comment[", k.to_string(), v.to_string(), &mut i18n_comments) {
+                if Self::populate_i18n("Comment[", k.to_string(), v.to_string(), &mut i18n_comments) {
                     continue;
                 }
 
