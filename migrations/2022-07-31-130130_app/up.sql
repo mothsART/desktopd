@@ -7,6 +7,6 @@ CREATE TABLE app (
     exec VARCHAR NULL,
     try_exec VARCHAR NULL,
     icon_path VARCHAR NULL,
-    
+
     UNIQUE(id, path)
 )

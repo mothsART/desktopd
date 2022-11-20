@@ -35,5 +35,5 @@ fn main() {
         }
         Err(e) => eprintln!("Error: {}", e),
     }
-    watch();
+    //watch();
 }

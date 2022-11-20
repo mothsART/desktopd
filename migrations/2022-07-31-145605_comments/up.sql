@@ -5,4 +5,5 @@ CREATE TABLE comments (
     lang VARCHAR NOT NULL,
 
     UNIQUE(id)
+    FOREIGN KEY (app_id) REFERENCES app (id)
 )

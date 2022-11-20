@@ -1,6 +1,6 @@
 table! {
     app (id) {
-        id -> Integer,
+        id -> Int4,
         title -> Text,
         path -> Text,
         generic_title -> Nullable<Text>,
@@ -13,8 +13,8 @@ table! {
 
 table! {
     comments (id) {
-        id -> Integer,
-        app_id -> Integer,
+        id -> Int4,
+        app_id -> Int4,
         title -> Text,
         lang -> Text,
     }
@@ -22,11 +22,18 @@ table! {
 
 table! {
     keywords (id) {
-        id -> Integer,
-        app_id -> Integer,
+        id -> Int4,
+        app_id -> Int4,
         key -> Text,
         lang -> Nullable<Text>,
     }
 }
 
-allow_tables_to_appear_in_same_query!(app, comments, keywords,);
+joinable!(comments -> app (app_id));
+joinable!(keywords -> app (app_id));
+
+allow_tables_to_appear_in_same_query!(
+    app,
+    comments,
+    keywords,
+);

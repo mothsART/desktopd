@@ -13,7 +13,7 @@ impl PopulateDb for DesktopDDb {
     fn insertion(&mut self, desktop_files: Vec<DesktopFile>) {
         use crate::schema::{app, comments, keywords};
 
-        self.connection.transaction::<_, Error, _>(|connection| {
+        let _result = self.connection.transaction::<_, Error, _>(|connection| {
             diesel::delete(app::table).execute(connection)?;
             diesel::delete(comments::table).execute(connection)?;
             diesel::delete(keywords::table).execute(connection)?;

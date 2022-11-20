@@ -5,4 +5,5 @@ CREATE TABLE keywords (
     lang VARCHAR NULL,
 
     UNIQUE(id)
+    FOREIGN KEY (app_id) REFERENCES app (id)
 )
