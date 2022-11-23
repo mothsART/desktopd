@@ -19,7 +19,7 @@ use crate::watch::watch;
 
 fn main() {
     let xdg_data_dirs = env::var("XDG_DATA_DIRS");
-    let mut db = DesktopDDb::new();
+    let mut db = DesktopDDb::new(false);
 
     match xdg_data_dirs {
         Ok(v) => {

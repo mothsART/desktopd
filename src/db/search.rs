@@ -14,6 +14,7 @@ pub trait SearchDb {
         &mut self,
         text: &str,
         locale: &str,
+        limit: u8,
     ) -> Result<Vec<Option<SearchResult>>, diesel::result::Error>;
 }
 
@@ -22,6 +23,7 @@ impl SearchDb for DesktopDDb {
         &mut self,
         text: &str,
         locale: &str,
+        limit: u8,
     ) -> Result<Vec<Option<SearchResult>>, diesel::result::Error> {
         use crate::schema::{app, comments, keywords};
 
@@ -66,11 +68,14 @@ impl SearchDb for DesktopDDb {
                             .or(app::title.like(format!("{}%", text))),
                     ),
             )
+            .limit(limit.into())
             .select(selection.nullable())
             .group_by(selection);
 
-        let debug = debug_query::<Sqlite, _>(&query);
-        println!("{}", debug);
+        if self.debug {
+            let sql_debug = debug_query::<Sqlite, _>(&query);
+            println!("{}", sql_debug);
+        }
 
         query.load::<Option<SearchResult>>(&mut self.connection)
     }
