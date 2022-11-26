@@ -31,7 +31,6 @@ impl SearchDb for DesktopDDb {
             app::title,
             app::path,
             app::generic_title,
-            app::comment,
             app::exec,
             app::try_exec,
             app::icon_path,
@@ -42,7 +41,6 @@ impl SearchDb for DesktopDDb {
             app::title,
             app::path,
             app::generic_title,
-            app::comment,
             app::exec,
             app::try_exec,
             app::icon_path,
@@ -51,24 +49,36 @@ impl SearchDb for DesktopDDb {
 
         // TODO : I'm not sure, "en" was the best choice
         let lang = locale.get(0..2).unwrap_or("en");
+        let location = locale.get(0..5).unwrap_or("en_EN");
 
         let query = app::dsl::app
             .left_join(keywords::dsl::keywords)
-            .left_join(comments::dsl::comments)
+            .inner_join(comments::dsl::comments)
             .filter(
-                keywords::lang
-                    .like(format!("{}%", lang))
-                    .and(comments::lang.like(format!("{}%", lang)))
-                    .and(
+                app::title
+                    .like(format!("{}%", text))
+                    .or(
                         comments::title
                             .like(format!("%{}%", text))
-                            .or(keywords::key
-                                .like(format!("{}%", text))
-                                .or(keywords::lang.is_null()))
-                            .or(app::title.like(format!("{}%", text))),
-                    ),
+                            .and(
+                                comments::lang.eq(lang)
+                                .or(
+                                    comments::lang.eq(location)
+                                )
+                            )
+                    )
+                    .or(
+                        keywords::key
+                            .like(format!("{}%", text))
+                            .and(
+                                keywords::lang.eq(lang)
+                                .or(
+                                    keywords::lang.eq(location)
+                                )
+                            )
+                    )
             )
-            .limit(limit.into())
+            //.limit(limit.into())
             .select(selection.nullable())
             .group_by(selection);
 

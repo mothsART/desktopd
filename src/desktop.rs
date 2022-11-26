@@ -3,6 +3,17 @@ use std::path::Path;
 
 use ini::Ini;
 
+// defined here : https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
+pub const FIELDS_CODE: [char; 7] = [
+    'f',
+    'F',
+    'u',
+    'U',
+    'i',
+    'c',
+    'k',
+];
+
 #[derive(Debug, Eq, PartialEq)]
 pub struct DesktopFile {
     pub path: String,

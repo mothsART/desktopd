@@ -4,8 +4,7 @@ table! {
         title -> Text,
         path -> Text,
         generic_title -> Nullable<Text>,
-        comment -> Nullable<Text>,
-        exec -> Nullable<Text>,
+        exec -> Text,
         try_exec -> Nullable<Text>,
         icon_path -> Nullable<Text>,
     }
@@ -15,7 +14,7 @@ table! {
     comments (id) {
         id -> Int4,
         app_id -> Int4,
-        title -> Text,
+        title -> Nullable<Text>,
         lang -> Text,
     }
 }
