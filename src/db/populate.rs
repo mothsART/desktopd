@@ -67,7 +67,8 @@ impl PopulateDb for DesktopDDb {
 
             let mut app_id = 0;
             let mut constrain_keywords = HashSet::new();
-            let mut constrain_comments = HashSet::new();
+            let mut constrain_app_comments = HashSet::new();
+            let mut constrain_locale_comments = HashSet::new();
 
             for d in &desktop_files {
                 if let Some(exec) = d.exec.as_deref() {
@@ -90,8 +91,8 @@ impl PopulateDb for DesktopDDb {
                         locales.get(no_locale)
                     ) {
                         let hash = format!("{}_{}", app_id, d.default_name);
-                        if !constrain_comments.contains(&hash) {
-                            constrain_comments.insert(hash);
+                        if !constrain_keywords.contains(&hash) {
+                            constrain_keywords.insert(hash);
                             let a_l = NewAppLocale {
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
@@ -100,12 +101,12 @@ impl PopulateDb for DesktopDDb {
                                 .values(&a_l)
                                 .execute(connection)?;
 
-                            let default_comment = NewComments {
-                                title: &d.default_name,
+                            let default_comment = NewKeywords {
+                                key: &d.default_name,
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
                             };
-                            diesel::insert_into(comments::table)
+                            diesel::insert_into(keywords::table)
                                 .values(&default_comment)
                                 .execute(connection)?;
                         }
@@ -167,9 +168,13 @@ impl PopulateDb for DesktopDDb {
                         d.default_comment.as_deref(),
                         locales.get(no_locale)
                     ) {
-                        let hash = format!("{}_{}", app_id, d_comment);
-                        if !constrain_comments.contains(&hash) {
-                            constrain_comments.insert(hash);
+                        let app_hash = format!("{}_{}", app_id, d_comment);
+                        let locale_hash = format!("{}_{}", _locale_id, d_comment);
+                        if !constrain_app_comments.contains(&app_hash)
+                        && !constrain_locale_comments.contains(&locale_hash) {
+                            constrain_app_comments.insert(app_hash);
+                            constrain_locale_comments.insert(locale_hash);
+
                             let a_l = NewAppLocale {
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
@@ -191,11 +196,15 @@ impl PopulateDb for DesktopDDb {
 
                     for c in &d.i18n_comments {
                         if let Some(_locale_id) = locales.get(c.0) {
-                            let hash = format!("{}_{}", app_id, c.1);
-                            if constrain_comments.contains(&hash) {
+                            let app_hash = format!("{}_{}", app_id, c.1);
+                            let locale_hash = format!("{}_{}", _locale_id, c.1);
+                            if constrain_app_comments.contains(&app_hash)
+                            || constrain_locale_comments.contains(&locale_hash) {
                                 continue;
                             }
-                            constrain_comments.insert(hash);
+                            constrain_app_comments.insert(app_hash);
+                            constrain_locale_comments.insert(locale_hash);
+
                             let a_l = NewAppLocale {
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
@@ -241,20 +250,33 @@ impl PopulateDb for DesktopDDb {
                         }
                     }
 
-/*
-                    for k_lang in d.i18n_keywords {
-                        for k in k_lang.1 {
-                            let keyword = NewKeywords {
-                                key: &k,
-                                app_id: app_id as i32,
-                                locale_id: 0,
-                            };
-                            diesel::insert_into(keywords::table)
-                                .values(&keyword)
-                                .execute(connection)?;
+                    for k_lang in &d.i18n_keywords {
+                        if let Some(_locale_id) = locales.get(k_lang.0) {
+                            for k in k_lang.1 {
+                                let hash = format!("{}_{}", app_id, k);
+                                if constrain_keywords.contains(&hash) {
+                                    continue;
+                                }
+                                constrain_keywords.insert(hash);
+                                let a_l = NewAppLocale {
+                                    app_id: app_id as i32,
+                                    locale_id: *_locale_id,
+                                };
+                                diesel::insert_into(app_locale::table)
+                                    .values(&a_l)
+                                    .execute(connection)?;
+
+                                let keyword = NewKeywords {
+                                    key: &k,
+                                    app_id: app_id as i32,
+                                    locale_id: 0,
+                                };
+                                diesel::insert_into(keywords::table)
+                                    .values(&keyword)
+                                    .execute(connection)?;
+                            }
                         }
                     }
-                    */
                 }
             }
             Ok(())

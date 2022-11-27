@@ -6,6 +6,7 @@ CREATE TABLE comments (
 
     UNIQUE(id)
     UNIQUE(app_id, title)
+    UNIQUE(locale_id, title)
 
     FOREIGN KEY (app_id) REFERENCES app (id)
     FOREIGN KEY (locale_id) REFERENCES locale (id)
