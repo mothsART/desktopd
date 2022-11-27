@@ -1,4 +1,4 @@
-use crate::schema::{app, comments, keywords, locale, app_locale};
+use crate::schema::{app, app_locale, comments, keywords, locale};
 
 #[derive(Debug, Queryable)]
 pub struct SearchResult {
@@ -9,7 +9,7 @@ pub struct SearchResult {
     pub try_exec: Option<String>,
     pub icon_path: Option<String>,
 
-    pub comment:  String,
+    pub comment: String,
 }
 
 #[derive(Insertable)]

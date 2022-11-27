@@ -20,9 +20,6 @@ impl Db for DesktopDDb {
         let database_path = env::var("DESKTOPD_DB_PATH").expect("DESKTOPD_DB_PATH must be set");
         let connection = SqliteConnection::establish(&database_path)
             .unwrap_or_else(|_| panic!("Error connecting to {}", &database_path));
-        DesktopDDb {
-            debug,
-            connection
-        }
+        DesktopDDb { debug, connection }
     }
 }

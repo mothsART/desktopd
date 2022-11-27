@@ -50,10 +50,4 @@ joinable!(comments -> locale (locale_id));
 joinable!(keywords -> app (app_id));
 joinable!(keywords -> locale (locale_id));
 
-allow_tables_to_appear_in_same_query!(
-    app,
-    app_locale,
-    comments,
-    keywords,
-    locale,
-);
+allow_tables_to_appear_in_same_query!(app, app_locale, comments, keywords, locale,);

@@ -4,15 +4,7 @@ use std::path::Path;
 use ini::Ini;
 
 // defined here : https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
-pub const FIELDS_CODE: [char; 7] = [
-    'f',
-    'F',
-    'u',
-    'U',
-    'i',
-    'c',
-    'k',
-];
+pub const FIELDS_CODE: [char; 7] = ['f', 'F', 'u', 'U', 'i', 'c', 'k'];
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct DesktopFile {
@@ -76,7 +68,8 @@ impl DesktopFile {
                 ) {
                     continue;
                 }
-                if Self::populate_i18n("Comment[", k.to_string(), v.to_string(), &mut i18n_comments) {
+                if Self::populate_i18n("Comment[", k.to_string(), v.to_string(), &mut i18n_comments)
+                {
                     continue;
                 }
 
