@@ -4,6 +4,8 @@ CREATE TABLE app_locale (
     locale_id INTEGER NOT NULL,
 
     UNIQUE(id)
+    UNIQUE(app_id, locale_id)
+
     FOREIGN KEY (app_id) REFERENCES app (id)
     FOREIGN KEY (locale_id) REFERENCES locale (id)
 )
