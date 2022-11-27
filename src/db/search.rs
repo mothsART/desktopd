@@ -1,8 +1,9 @@
 use diesel::debug_query;
 use diesel::sqlite::Sqlite;
+use crate::diesel::JoinOnDsl;
 
 use diesel::{
-    BoolExpressionMethods, ExpressionMethods, NullableExpressionMethods, QueryDsl, RunQueryDsl,
+    BoolExpressionMethods, ExpressionMethods, QueryDsl, RunQueryDsl,
     TextExpressionMethods,
 };
 
@@ -15,7 +16,7 @@ pub trait SearchDb {
         text: &str,
         locale: &str,
         limit: u8,
-    ) -> Result<Vec<Option<SearchResult>>, diesel::result::Error>;
+    ) -> Result<Vec<SearchResult>, diesel::result::Error>;
 }
 
 impl SearchDb for DesktopDDb {
@@ -24,8 +25,8 @@ impl SearchDb for DesktopDDb {
         text: &str,
         locale: &str,
         limit: u8,
-    ) -> Result<Vec<Option<SearchResult>>, diesel::result::Error> {
-        use crate::schema::{app, comments, keywords};
+    ) -> Result<Vec<SearchResult>, diesel::result::Error> {
+        use crate::schema::{app, app_locale, locale, comments, keywords};
 
         let selection = (
             app::title,
@@ -52,43 +53,43 @@ impl SearchDb for DesktopDDb {
         let location = locale.get(0..5).unwrap_or("en_EN");
 
         let query = app::dsl::app
-            .left_join(keywords::dsl::keywords)
-            .inner_join(comments::dsl::comments)
+            .inner_join(
+                app_locale::dsl::app_locale.on(app_locale::app_id.eq(app::id))
+            )
+            .inner_join(
+                locale::dsl::locale.on(locale::id.eq(app_locale::locale_id))
+            )
+            .inner_join(keywords::dsl::keywords)
+            .inner_join(comments::dsl::comments.on(
+                    comments::app_id.eq(app::id)
+                    .and(
+                        comments::locale_id.eq(locale::id)
+                    )
+                )
+            )
             .filter(
-                app::title
-                    .like(format!("{}%", text))
-                    /*
-                    .or(
-                        comments::title
-                            .like(format!("%{}%", text))
-                            .and(
-                                comments::lang.eq(lang)
-                                .or(
-                                    comments::lang.eq(location)
-                                )
-                            )
+                keywords::key
+                    .like(format!("%{}%", text))
+                    .and(
+                        locale::key.eq(lang)
+                        .or(
+                            locale::key.eq(location)
+                        )
+                        .or(
+                            locale::key.eq("__NO_LOCALE__")
+                        )
                     )
-                    .or(
-                        keywords::key
-                            .like(format!("{}%", text))
-                            .and(
-                                keywords::lang.eq(lang)
-                                .or(
-                                    keywords::lang.eq(location)
-                                )
-                            )
-                    )
-                    */
             )
             //.limit(limit.into())
-            .select(selection.nullable())
-            .group_by(selection);
+            .select(selection)
+            .group_by(selection)
+            ;
 
         if self.debug {
             let sql_debug = debug_query::<Sqlite, _>(&query);
             println!("{}", sql_debug);
         }
 
-        query.load::<Option<SearchResult>>(&mut self.connection)
+        query.load::<SearchResult>(&mut self.connection)
     }
 }

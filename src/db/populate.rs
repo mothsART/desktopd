@@ -26,7 +26,7 @@ impl PopulateDb for DesktopDDb {
             let mut locales = HashMap::new();
 
             for d in &desktop_files {
-                if let Some(exec) = d.exec.as_deref() {
+                if let Some(_exec) = d.exec.as_deref() {
                     for c in &d.i18n_comments {
                         if locales.contains_key(c.0) {
                             continue;
@@ -66,7 +66,8 @@ impl PopulateDb for DesktopDDb {
             .execute(connection)?;
 
             let mut app_id = 0;
-            let mut constrain_keywords = HashSet::new();
+            let mut constrain_app_keywords = HashSet::new();
+            let mut constrain_locale_keywords = HashSet::new();
             let mut constrain_app_comments = HashSet::new();
             let mut constrain_locale_comments = HashSet::new();
 
@@ -87,12 +88,14 @@ impl PopulateDb for DesktopDDb {
 
                     app_id += 1;
 
-                    if let Some(_locale_id) = (
-                        locales.get(no_locale)
-                    ) {
-                        let hash = format!("{}_{}", app_id, d.default_name);
-                        if !constrain_keywords.contains(&hash) {
-                            constrain_keywords.insert(hash);
+                    if let Some(_locale_id) = locales.get(no_locale) {
+                        let app_hash = format!("{}_{}", app_id, d.default_name);
+                        let locale_hash = format!("{}_{}", _locale_id, d.default_name);
+                        if !constrain_app_keywords.contains(&app_hash)
+                        && !constrain_locale_keywords.contains(&locale_hash) {
+                            constrain_app_keywords.insert(app_hash);
+                            constrain_locale_keywords.insert(locale_hash);
+
                             let a_l = NewAppLocale {
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
@@ -114,11 +117,15 @@ impl PopulateDb for DesktopDDb {
 
                     for n in &d.i18n_names {
                         if let Some(_locale_id) = locales.get(n.0) {
-                            let hash = format!("{}_{}", app_id, n.1);
-                            if constrain_keywords.contains(&hash) {
+                            let app_hash = format!("{}_{}", app_id, n.1);
+                            let locale_hash = format!("{}_{}", _locale_id, n.1);
+                            if constrain_app_keywords.contains(&app_hash)
+                            || constrain_locale_keywords.contains(&locale_hash) {
                                 continue;
                             }
-                            constrain_keywords.insert(hash);
+                            constrain_app_keywords.insert(app_hash);
+                            constrain_locale_keywords.insert(locale_hash);
+
                             let a_l = NewAppLocale {
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
@@ -140,11 +147,15 @@ impl PopulateDb for DesktopDDb {
 
                     for g in &d.i18n_generic_names {
                         if let Some(_locale_id) = locales.get(g.0) {
-                            let hash = format!("{}_{}", app_id, g.1);
-                            if constrain_keywords.contains(&hash) {
+                            let app_hash = format!("{}_{}", app_id, g.1);
+                            let locale_hash = format!("{}_{}", _locale_id, g.1);
+                            if constrain_app_keywords.contains(&app_hash) 
+                            || constrain_locale_keywords.contains(&locale_hash) {
                                 continue;
                             }
-                            constrain_keywords.insert(hash);
+                            constrain_app_keywords.insert(app_hash);
+                            constrain_locale_keywords.insert(locale_hash);
+
                             let a_l = NewAppLocale {
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
@@ -226,11 +237,15 @@ impl PopulateDb for DesktopDDb {
 
                     for k in &d.default_keywords {
                         if let Some(_locale_id) = locales.get(no_locale) {
-                            let hash = format!("{}_{}", app_id, k);
-                            if constrain_keywords.contains(&hash) {
+                            let app_hash = format!("{}_{}", app_id, k);
+                            let locale_hash = format!("{}_{}", _locale_id, k);
+                            if constrain_app_keywords.contains(&app_hash)
+                            || constrain_locale_keywords.contains(&locale_hash) {
                                 continue;
                             }
-                            constrain_keywords.insert(hash);
+                            constrain_app_keywords.insert(app_hash);
+                            constrain_locale_keywords.insert(locale_hash);
+
                             let a_l = NewAppLocale {
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
@@ -253,11 +268,15 @@ impl PopulateDb for DesktopDDb {
                     for k_lang in &d.i18n_keywords {
                         if let Some(_locale_id) = locales.get(k_lang.0) {
                             for k in k_lang.1 {
-                                let hash = format!("{}_{}", app_id, k);
-                                if constrain_keywords.contains(&hash) {
+                                let app_hash = format!("{}_{}", app_id, k);
+                                let locale_hash = format!("{}_{}", _locale_id, k);
+                                if constrain_app_keywords.contains(&app_hash)
+                                || constrain_locale_keywords.contains(&locale_hash) {
                                     continue;
                                 }
-                                constrain_keywords.insert(hash);
+                                constrain_app_keywords.insert(app_hash);
+                                constrain_locale_keywords.insert(locale_hash);
+
                                 let a_l = NewAppLocale {
                                     app_id: app_id as i32,
                                     locale_id: *_locale_id,
