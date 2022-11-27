@@ -1,15 +1,15 @@
-use crate::schema::{app, comments, keywords};
+use crate::schema::{app, comments, keywords, locale, app_locale};
 
 #[derive(Debug, Queryable)]
 pub struct SearchResult {
     pub title: String,
     pub path: String,
     pub generic_title: Option<String>,
-    pub exec: String,
+    pub exec: Option<String>,
     pub try_exec: Option<String>,
     pub icon_path: Option<String>,
 
-    pub comment:  Option<String>,
+    pub comment:  String,
 }
 
 #[derive(Insertable)]
@@ -24,17 +24,32 @@ pub struct NewApp<'a> {
 }
 
 #[derive(Insertable)]
+#[diesel(table_name = app_locale)]
+pub struct NewAppLocale {
+    pub app_id: i32,
+    pub locale_id: i32,
+}
+
+#[derive(Insertable)]
+#[diesel(table_name = locale)]
+pub struct NewLocale<'a> {
+    pub key: &'a str,
+}
+
+#[derive(Insertable)]
 #[diesel(table_name = comments)]
 pub struct NewComments<'a> {
     pub title: &'a str,
+
     pub app_id: i32,
-    pub lang: Option<&'a str>,
+    pub locale_id: i32,
 }
 
 #[derive(Insertable)]
 #[diesel(table_name = keywords)]
 pub struct NewKeywords<'a> {
     pub key: &'a str,
+
     pub app_id: i32,
-    pub lang: Option<&'a str>,
+    pub locale_id: i32,
 }
