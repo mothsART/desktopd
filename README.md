@@ -8,7 +8,7 @@
 
 ## Introduction
 
-A linux daemon who store .desktop meta-datas from $XDG_DATA_DIRS on database.
+A linux daemon who store .desktop meta-datas from $XDG_DATA_DIRS on a SQLite database.
 
 ## Goal
 
