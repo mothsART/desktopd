@@ -32,7 +32,7 @@ impl PopulateDb for DesktopDDb {
                             continue;
                         }
                         locales.insert(c.0.clone(), locale_id);
-                        let l = NewLocale { key: &c.0 };
+                        let l = NewLocale { key: c.0 };
                         diesel::insert_into(locale::table)
                             .values(&l)
                             .execute(connection)?;
@@ -44,7 +44,7 @@ impl PopulateDb for DesktopDDb {
                             continue;
                         }
                         locales.insert(k_lang.0.clone(), locale_id);
-                        let l = NewLocale { key: &k_lang.0 };
+                        let l = NewLocale { key: k_lang.0 };
                         diesel::insert_into(locale::table)
                             .values(&l)
                             .execute(connection)?;
@@ -75,7 +75,7 @@ impl PopulateDb for DesktopDDb {
                         title: &d.default_name,
                         path: &d.path,
                         generic_title: d.default_generic_name.as_deref(),
-                        exec: exec,
+                        exec,
                         try_exec: d.try_exec.as_deref(),
                         icon_path: d.icon.as_deref(),
                     };
@@ -145,7 +145,7 @@ impl PopulateDb for DesktopDDb {
                             }
 
                             let keyword = NewKeywords {
-                                key: &n.1,
+                                key: n.1,
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
                             };
@@ -181,7 +181,7 @@ impl PopulateDb for DesktopDDb {
                             }
 
                             let keyword = NewKeywords {
-                                key: &g.1,
+                                key: g.1,
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
                             };
@@ -252,7 +252,7 @@ impl PopulateDb for DesktopDDb {
                             }
 
                             let comment = NewComments {
-                                title: &c.1,
+                                title: c.1,
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
                             };
@@ -288,7 +288,7 @@ impl PopulateDb for DesktopDDb {
                             }
 
                             let keyword = NewKeywords {
-                                key: &k,
+                                key: k,
                                 app_id: app_id as i32,
                                 locale_id: *_locale_id,
                             };
@@ -325,7 +325,7 @@ impl PopulateDb for DesktopDDb {
                                 }
 
                                 let keyword = NewKeywords {
-                                    key: &k,
+                                    key: k,
                                     app_id: app_id as i32,
                                     locale_id: 0,
                                 };
