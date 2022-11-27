@@ -4,7 +4,7 @@ table! {
         title -> Text,
         path -> Text,
         generic_title -> Nullable<Text>,
-        exec -> Nullable<Text>,
+        exec -> Text,
         try_exec -> Nullable<Text>,
         icon_path -> Nullable<Text>,
     }

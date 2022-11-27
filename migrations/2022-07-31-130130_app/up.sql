@@ -3,7 +3,7 @@ CREATE TABLE app (
     title VARCHAR NOT NULL,
     path VARCHAR NOT NULL,
     generic_title VARCHAR NULL,
-    exec VARCHAR NULL,
+    exec VARCHAR,
     try_exec VARCHAR,
     icon_path VARCHAR NULL,
 

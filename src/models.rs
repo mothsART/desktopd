@@ -5,7 +5,7 @@ pub struct SearchResult {
     pub title: String,
     pub path: String,
     pub generic_title: Option<String>,
-    pub exec: Option<String>,
+    pub exec: String,
     pub try_exec: Option<String>,
     pub icon_path: Option<String>,
 
