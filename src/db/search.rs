@@ -1,5 +1,8 @@
 use diesel::debug_query;
 use diesel::sqlite::Sqlite;
+use diesel::dsl::exists;
+use diesel::dsl::not;
+
 use crate::diesel::JoinOnDsl;
 
 use diesel::{
@@ -37,20 +40,28 @@ impl SearchDb for DesktopDDb {
             app::icon_path,
             comments::title,
         );
-
-        allow_columns_to_appear_in_same_group_by_clause!(
-            app::title,
-            app::path,
-            app::generic_title,
-            app::exec,
-            app::try_exec,
-            app::icon_path,
-            comments::title,
+        
+        let (sub_locale, sub_app_locale) = alias!(
+            locale as sub_locale, 
+            app_locale as sub_app_locale, 
         );
 
         // TODO : I'm not sure, "en" was the best choice
         let lang = locale.get(0..2).unwrap_or("en");
         let location = locale.get(0..5).unwrap_or("en_EN");
+
+        let sub_query = sub_locale
+            .inner_join(sub_app_locale)
+            .filter(
+                sub_app_locale.field(app_locale::app_id).eq(app::id)
+                .and(
+                    sub_locale.field(locale::key).eq(lang)
+                    .or(
+                        sub_locale.field(locale::key).eq(locale)
+                    )
+                )
+            )
+            .limit(1);
 
         let query = app::dsl::app
             .inner_join(
@@ -77,13 +88,16 @@ impl SearchDb for DesktopDDb {
                         )
                         .or(
                             locale::key.eq("__NO_LOCALE__")
+                            .and(
+                                not(exists(
+                                    sub_query
+                                ))
+                            )
                         )
                     )
             )
-            //.limit(limit.into())
-            .select(selection)
-            .group_by(selection)
-            ;
+            .limit(limit.into())
+            .select(selection);
 
         if self.debug {
             let sql_debug = debug_query::<Sqlite, _>(&query);
