@@ -7,5 +7,6 @@ CREATE TABLE app (
     try_exec VARCHAR,
     icon_path VARCHAR NULL,
 
-    UNIQUE(id, path)
+    UNIQUE(id)
+    UNIQUE (path)
 )

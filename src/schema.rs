@@ -1,34 +1,59 @@
 table! {
     app (id) {
-        id -> Int4,
+        id -> Integer,
         title -> Text,
         path -> Text,
         generic_title -> Nullable<Text>,
-        exec -> Text,
+        exec -> Nullable<Text>,
         try_exec -> Nullable<Text>,
         icon_path -> Nullable<Text>,
     }
 }
 
 table! {
+    app_locale (id) {
+        id -> Integer,
+        app_id -> Integer,
+        locale_id -> Integer,
+    }
+}
+
+table! {
     comments (id) {
-        id -> Int4,
-        app_id -> Int4,
-        title -> Nullable<Text>,
-        lang -> Text,
+        id -> Integer,
+        app_id -> Integer,
+        locale_id -> Integer,
+        title -> Text,
     }
 }
 
 table! {
     keywords (id) {
-        id -> Int4,
-        app_id -> Int4,
+        id -> Integer,
+        app_id -> Integer,
+        locale_id -> Integer,
         key -> Text,
-        lang -> Nullable<Text>,
     }
 }
 
-joinable!(comments -> app (app_id));
-joinable!(keywords -> app (app_id));
+table! {
+    locale (id) {
+        id -> Integer,
+        key -> Text,
+    }
+}
 
-allow_tables_to_appear_in_same_query!(app, comments, keywords,);
+joinable!(app_locale -> app (app_id));
+joinable!(app_locale -> locale (locale_id));
+joinable!(comments -> app (app_id));
+joinable!(comments -> locale (locale_id));
+joinable!(keywords -> app (app_id));
+joinable!(keywords -> locale (locale_id));
+
+allow_tables_to_appear_in_same_query!(
+    app,
+    app_locale,
+    comments,
+    keywords,
+    locale,
+);

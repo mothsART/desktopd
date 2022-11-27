@@ -57,6 +57,7 @@ impl SearchDb for DesktopDDb {
             .filter(
                 app::title
                     .like(format!("{}%", text))
+                    /*
                     .or(
                         comments::title
                             .like(format!("%{}%", text))
@@ -77,6 +78,7 @@ impl SearchDb for DesktopDDb {
                                 )
                             )
                     )
+                    */
             )
             //.limit(limit.into())
             .select(selection.nullable())
