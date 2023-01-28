@@ -23,7 +23,7 @@ pub fn get_dirs(xdg_data_dirs: &str) -> Vec<String> {
 pub fn collect_desktops_path(dirs: Vec<String>) -> Vec<String> {
     let mut result = vec![];
     for d in dirs {
-        for desktop_file in glob(&format!("{}/*.desktop", d)).unwrap() {
+        for desktop_file in glob(&format!("{d}/*.desktop")).unwrap() {
             match desktop_file {
                 Ok(path) => result.push(path.display().to_string()),
                 Err(_e) => continue,

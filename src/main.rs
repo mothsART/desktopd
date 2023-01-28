@@ -31,7 +31,7 @@ fn main() {
             }
             db.insertion(desktop_files);
         }
-        Err(e) => eprintln!("Error: {}", e),
+        Err(e) => eprintln!("Error: {e}"),
     }
     watch();
 }

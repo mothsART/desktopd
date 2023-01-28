@@ -69,7 +69,7 @@ impl SearchDb for DesktopDDb {
                     .and(comments::locale_id.eq(locale::id))),
             )
             .filter(
-                keywords::key.like(format!("%{}%", text)).and(
+                keywords::key.like(format!("%{text}%")).and(
                     locale::key
                         .eq(lang)
                         .or(locale::key.eq(location))
@@ -81,7 +81,7 @@ impl SearchDb for DesktopDDb {
 
         if self.debug {
             let sql_debug = debug_query::<Sqlite, _>(&query);
-            println!("{}", sql_debug);
+            println!("{sql_debug}");
         }
 
         query.load::<SearchResult>(&mut self.connection)
