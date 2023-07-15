@@ -15,7 +15,6 @@ pub fn get_dirs(xdg_data_dirs: &str) -> Vec<String> {
                 .to_string()
         })
         .filter(|s| Path::new(s).is_dir())
-        .into_iter()
         .dedup()
         .collect()
 }
